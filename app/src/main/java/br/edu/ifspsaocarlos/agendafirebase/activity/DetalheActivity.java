@@ -1,13 +1,15 @@
 package br.edu.ifspsaocarlos.agendafirebase.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-
+import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,8 +17,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import br.edu.ifspsaocarlos.agendafirebase.model.Contato;
+import java.util.Arrays;
+import java.util.List;
+
 import br.edu.ifspsaocarlos.agendafirebase.R;
+import br.edu.ifspsaocarlos.agendafirebase.model.Contato;
 
 
 public class DetalheActivity extends AppCompatActivity {
@@ -24,15 +29,23 @@ public class DetalheActivity extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     String FirebaseID;
+    private List<String> tiposContato;
+
+    private EditText nomeText;
+    private EditText foneText;
+    private EditText emailText;
+    private Spinner tipoSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        tiposContato = Arrays.asList(getResources().getStringArray(R.array.tipos_contato));
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        bindViews();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -44,26 +57,21 @@ public class DetalheActivity extends AppCompatActivity {
               databaseReference.child(FirebaseID).addValueEventListener(new ValueEventListener() {
 
                 @Override
-                public void onDataChange(DataSnapshot snapshot) {
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
                     c = snapshot.getValue(Contato.class);
 
                     if (c != null) {
-                        EditText nameText = (EditText) findViewById(R.id.editTextNome);
-                        nameText.setText(c.getNome());
-
-
-                        EditText foneText = (EditText) findViewById(R.id.editTextFone);
+                        nomeText.setText(c.getNome());
                         foneText.setText(c.getFone());
-
-
-                        EditText emailText = (EditText) findViewById(R.id.editTextEmail);
                         emailText.setText(c.getEmail());
-
+                        if (tiposContato.contains(c.getTipo())) {
+                            tipoSpinner.setSelection(tiposContato.indexOf(c.getTipo()));
+                        }
                     }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
 
@@ -71,6 +79,18 @@ public class DetalheActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void bindViews() {
+        nomeText = findViewById(R.id.editTextNome);
+        foneText = findViewById(R.id.editTextFone);
+        emailText = findViewById(R.id.editTextEmail);
+        tipoSpinner = findViewById(R.id.spinnerTipo);
+
+        // Configurar adapter
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tiposContato);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        tipoSpinner.setAdapter(adapter);
     }
 
     @Override
@@ -99,8 +119,7 @@ public class DetalheActivity extends AppCompatActivity {
         }
     }
 
-    private void apagar()
-    {
+    private void apagar() {
 
         databaseReference.child(FirebaseID).removeValue();
         Intent resultIntent = new Intent();
@@ -108,31 +127,20 @@ public class DetalheActivity extends AppCompatActivity {
         finish();
     }
 
-    private void salvar()
-    {
-        String name = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
-        String fone = ((EditText) findViewById(R.id.editTextFone)).getText().toString();
-        String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
-
+    private void salvar() {
+        final DatabaseReference contatoReference;
         if (c==null) {
             c = new Contato();
-
-            c.setNome(name);
-            c.setFone(fone);
-            c.setEmail(email);
-            databaseReference.push().setValue(c);
-
+            contatoReference = databaseReference.push();
+        } else {
+            contatoReference = databaseReference.child(FirebaseID);
         }
-        else
-        {
-            c.setNome(name);
-            c.setFone(fone);
-            c.setEmail(email);
 
-            databaseReference.child(FirebaseID).setValue(c);
-
-
-        }
+        c.setNome(nomeText.getText().toString());
+        c.setFone(foneText.getText().toString());
+        c.setEmail(emailText.getText().toString());
+        c.setTipo((String) tipoSpinner.getSelectedItem());
+        contatoReference.setValue(c);
 
         Intent resultIntent = new Intent();
         setResult(RESULT_OK,resultIntent);

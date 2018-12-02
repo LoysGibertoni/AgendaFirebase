@@ -8,11 +8,26 @@
     <string name="nome">Nome</string>
     <string name="fone">Fone</string>
     <string name="email">Email</string>
+    <string name="tipo_de_contato">Tipo de contato</string>
     <string name="lista_vazia">Lista de contatos vazia</string>
     <string name="contato_nao_encontrado">Contato não encontrado</string>
     <string name="contato_adicionado">Contato adicionado</string>
     <string name="contato_alterado">Informações do contato alteradas</string>
     <string name="contato_apagado">Contato removido</string>
+    <string name="ordenar">Ordenar</string>
+    
+    <string name="todos">Todos</string>
+    <string name="amigos">Amigos</string>
+    <string name="familia">Família</string>
+    <string name="trabalho">Trabalho</string>
+    <string name="outro">Outro</string>
+
+    <string-array name="tipos_contato">
+        <item>@string/amigos</item>
+        <item>@string/familia</item>
+        <item>@string/trabalho</item>
+        <item>@string/outro</item>
+    </string-array>
 </resources>
 
 

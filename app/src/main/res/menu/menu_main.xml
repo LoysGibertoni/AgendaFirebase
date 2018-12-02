@@ -1,12 +1,45 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="br.edu.ifspsaocarlos.agendafirebase.activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="br.edu.ifspsaocarlos.agendafirebase.activity.MainActivity">
+
     <item
         android:id="@+id/pesqContato"
         app:showAsAction="ifRoom"
         android:title="@string/nome_do_contato"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        />
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <item
+        android:id="@+id/Ordenar"
+        android:title="@string/ordenar"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="always">
+
+        <menu>
+
+            <item android:id="@+id/todos"
+                android:title="@string/todos"
+                app:showAsAction="never" />
+
+            <item android:id="@+id/amigos"
+                android:title="@string/amigos"
+                app:showAsAction="never" />
+
+            <item android:id="@+id/familia"
+                android:title="@string/familia"
+                app:showAsAction="never" />
+
+            <item android:id="@+id/trabalho"
+                android:title="@string/trabalho"
+                app:showAsAction="never" />
+
+            <item android:id="@+id/outro"
+                android:title="@string/outro"
+                app:showAsAction="never" />
+
+        </menu>
+
+    </item>
 
  </menu>
 

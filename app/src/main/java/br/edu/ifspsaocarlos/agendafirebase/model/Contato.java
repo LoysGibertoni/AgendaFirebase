@@ -7,9 +7,9 @@ public class Contato {
     private String nome;
     private String fone;
     private String email;
+    private String tipo;
 
-    public Contato()
-    {
+    public Contato() {
     }
 
     public String getNome() {
@@ -29,6 +29,12 @@ public class Contato {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+    public String getTipo() {
+        return tipo;
+    }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
 
